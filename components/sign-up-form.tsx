@@ -10,6 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
+import {
+  buildOAuthCallbackUrl,
+  GITHUB_OAUTH_SCOPES,
+  getGithubOAuthErrorMessage,
+} from "@/lib/supabase/oauth";
 
 export function SignUpForm() {
   const [loading, setLoading] = useState(false);
@@ -23,17 +28,16 @@ export function SignUpForm() {
       const origin = window.location.origin;
       const params = new URLSearchParams(window.location.search);
       const nextParam = params.get("redirect") || params.get("next") || "/dashboard";
-      const callback = `${origin}/auth/callback${nextParam ? `?next=${encodeURIComponent(nextParam)}` : ""}`;
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "github",
         options: {
-          scopes: "read:user user:email",
-          redirectTo: callback,
+          scopes: GITHUB_OAUTH_SCOPES,
+          redirectTo: buildOAuthCallbackUrl(origin, nextParam),
         },
       });
       if (error) {
-        setErrorMsg("Could not start GitHub sign-in. Please try again.");
+        setErrorMsg(getGithubOAuthErrorMessage(error.message));
         setLoading(false);
         return;
       }

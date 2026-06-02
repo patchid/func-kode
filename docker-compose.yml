@@ -1,0 +1,96 @@
+services:
+  proxy:
+    image: traefik:v3.1
+    restart: unless-stopped
+    command:
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --entrypoints.web.address=:80
+    ports:
+      - "54321:80"
+    volumes:
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+
+  db:
+    image: supabase/postgres:15.8.1.085
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: postgres
+    ports:
+      - "54322:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supabase_admin -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-init:
+    image: postgres:15
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - ./database/ensure-users.sql:/ensure-users.sql:ro
+    command:
+      - /bin/sh
+      - -c
+      - until psql -h db -U supabase_admin -d postgres -tAc "select 1 from information_schema.tables where table_schema='auth' and table_name='users'" | grep -q 1; do sleep 2; done && psql -h db -U supabase_admin -d postgres -v ON_ERROR_STOP=1 -f /ensure-users.sql
+
+  auth:
+    image: supabase/gotrue:v2.185.0
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      API_EXTERNAL_URL: ${API_EXTERNAL_URL:-http://localhost:54321}
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_admin:${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
+      GOTRUE_JWT_SECRET: ${AUTH_JWT_SECRET:-replace-with-a-long-random-secret-at-least-32-chars}
+      JWT_SECRET: ${AUTH_JWT_SECRET:-replace-with-a-long-random-secret-at-least-32-chars}
+      GOTRUE_SITE_URL: ${SITE_URL:-http://localhost:3000}
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+      GOTRUE_URI_ALLOW_LIST: ${SITE_URL:-http://localhost:3000}/*
+      URI_ALLOW_LIST: ${SITE_URL:-http://localhost:3000}/*
+      GOTRUE_EXTERNAL_GITHUB_ENABLED: ${GITHUB_ENABLED:-true}
+      GOTRUE_EXTERNAL_GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GOTRUE_EXTERNAL_GITHUB_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GOTRUE_EXTERNAL_GITHUB_REDIRECT_URI: ${API_EXTERNAL_URL:-http://localhost:54321}/auth/v1/callback
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.auth.rule=PathPrefix(`/auth/v1`)
+      - traefik.http.routers.auth.entrypoints=web
+      - traefik.http.middlewares.auth-strip.stripprefix.prefixes=/auth/v1
+      - traefik.http.routers.auth.middlewares=auth-strip
+      - traefik.http.services.auth.loadbalancer.server.port=9999
+
+  rest:
+    image: postgrest/postgrest:v14.3
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://supabase_admin:${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
+      PGRST_DB_SCHEMAS: public,storage,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${AUTH_JWT_SECRET:-replace-with-a-long-random-secret-at-least-32-chars}
+      PGRST_SERVER_PORT: 3000
+      PGRST_SERVER_HOST: 0.0.0.0
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.rest.rule=PathPrefix(`/rest/v1`)
+      - traefik.http.routers.rest.entrypoints=web
+      - traefik.http.middlewares.rest-strip.stripprefix.prefixes=/rest/v1
+      - traefik.http.routers.rest.middlewares=rest-strip
+      - traefik.http.services.rest.loadbalancer.server.port=3000
+
+volumes:
+  db-data:

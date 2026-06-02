@@ -66,9 +66,23 @@ npm run dev
 Create a `.env.local` file with your personal development credentials:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your-personal-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-personal-anon-key
+NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-local-supabase-anon-key
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+SITE_URL=http://localhost:3000
+API_EXTERNAL_URL=http://localhost:54321
+AUTH_JWT_SECRET=your-local-jwt-secret
+GITHUB_ENABLED=true
+GITHUB_CLIENT_ID=your-github-oauth-app-client-id
+GITHUB_CLIENT_SECRET=your-github-oauth-app-client-secret
 ```
 
-> **Note**: The production environment uses separate OAuth apps and Supabase project for security.
+> **Note**: The production environment uses separate OAuth apps and Supabase project for security. For GitHub OAuth, set the callback URL to `http://localhost:54321/auth/v1/callback` in your GitHub OAuth app and keep `NEXT_PUBLIC_SUPABASE_URL` pointed at the local proxy on port `54321`.
+
+### Enable GitHub Login in Supabase
+
+1. Start the local stack with `docker compose up -d`.
+2. Open your GitHub OAuth app settings and add `http://localhost:54321/auth/v1/callback` as the authorization callback URL.
+3. Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `.env.local`.
+4. In Supabase Auth, keep the site URL at `http://localhost:3000` and allow `http://localhost:3000/auth/callback`.
+5. Restart the Next.js dev server after updating `.env.local`.

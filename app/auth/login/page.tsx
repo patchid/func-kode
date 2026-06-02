@@ -38,15 +38,20 @@ function LoginContent() {
     // Check if user is already logged in
     const checkAuth = async () => {
       const supabase = createClientComponentClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // User is already logged in, redirect to dashboard
-        router.replace("/dashboard");
-        return;
+
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          // User is already logged in, redirect to dashboard
+          router.replace("/dashboard");
+          return;
+        }
+      } catch (err) {
+        console.error("Unable to verify auth session:", err);
+      } finally {
+        setChecking(false);
       }
-      
-      setChecking(false);
     };
 
     checkAuth();

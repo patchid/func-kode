@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -47,25 +46,39 @@ export default function OnboardProfileForm({
     
     try {
       console.log('Submitting onboarding form...');
-      const supabase = createClientComponentClient();
-      const { error } = await supabase.from("users").update({
+      const payload = {
         github_username: form.github_username,
         display_name: form.display_name,
         bio: form.bio,
         skills: form.skills,
         role_preference: form.role_preference,
         interests: form.interests,
-        is_onboarded: true,
-      }).eq("id", form.id);
+        avatar_url: form.avatar_url || null,
+      };
+      const response = await fetch('/api/profile', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
       
       setLoading(false);
-      if (error) {
-        console.error('Supabase update error:', error);
-        setError(`Failed to update profile: ${error.message}`);
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        console.error('Profile API upsert error:', body?.error || response.statusText);
+        setError(`Failed to update profile: ${body?.error || response.statusText}`);
+        return;
+      }
+      const data = await response.json().catch(() => ({}));
+      if (!data?.id) {
+        setError("Profile save returned no data. Please try again.");
         return;
       }
       console.log('Onboarding successful, redirecting...');
-      router.push("/dashboard");
+      router.replace("/dashboard");
+      router.refresh();
     } catch (err) {
       console.error('Unexpected error:', err);
       setLoading(false);
@@ -77,7 +90,6 @@ export default function OnboardProfileForm({
     <div className="flex justify-center items-center min-h-[60vh]">
       <form 
         onSubmit={handleSubmit} 
-        action="#"
         className="w-full max-w-lg bg-white shadow-xl rounded-2xl p-8 space-y-8 border border-gray-100 animate-fade-in"
       >
         <div className="flex flex-col items-center gap-2 mb-6">
@@ -126,10 +138,6 @@ export default function OnboardProfileForm({
           type="submit"
           className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold text-lg shadow hover:bg-blue-700 transition-all duration-150 flex items-center justify-center gap-2 disabled:opacity-60"
           disabled={loading}
-          onClick={(e) => {
-            e.stopPropagation();
-            // Form submission handled by onSubmit
-          }}
         >
           {loading && <span className="loader border-white border-t-blue-600 mr-2"></span>}
           {loading ? "Saving..." : "Complete Onboarding"}

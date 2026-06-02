@@ -2,87 +2,87 @@
 import Link from "next/link";
 
 import { useEffect, useState } from 'react';
-import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import OnboardProfileForm from "@/components/onboard-profile-form";
 import Image from 'next/image';
 
 export default function OnboardPage() {
-  const supabase = createClientComponentClient();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState<ProfileShape | null>(null);
+  const [bootstrapError, setBootstrapError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Listen for auth state changes to restore session
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-    });
-
     const getSessionAndProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      try {
+        const response = await fetch('/api/profile', {
+          method: 'GET',
+          credentials: 'include',
+          cache: 'no-store',
+        });
+
+        if (response.status === 401) {
+          setIsAuthenticated(false);
+          setLoading(false);
+          return;
+        }
+
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          const message = body?.error || response.statusText;
+          console.error('Profile bootstrap API error:', message);
+          setBootstrapError(message);
+          // Keep user on the onboard page instead of redirecting in a loop.
+          setIsAuthenticated(true);
+          setLoading(false);
+          return;
+        }
+
+        const body = await response.json();
+        const apiProfile = body?.profile;
+        if (!apiProfile) {
+          setIsAuthenticated(false);
+          setLoading(false);
+          return;
+        }
+
+        setIsAuthenticated(true);
+        setProfile({
+          id: apiProfile.id,
+          github_username: apiProfile.github_username ?? 'newuser',
+          display_name: apiProfile.display_name ?? 'New User',
+          bio: apiProfile.bio ?? '',
+          skills: apiProfile.skills ?? '',
+          role_preference: apiProfile.role_preference ?? '',
+          interests: apiProfile.interests ?? '',
+          avatar_url: apiProfile.avatar_url ?? '',
+          is_onboarded: Boolean(apiProfile.is_onboarded),
+        });
+      } catch (err) {
+        console.error('Profile bootstrap request failed:', err);
+        setBootstrapError(err instanceof Error ? err.message : 'Unknown error');
+        setIsAuthenticated(true);
         setLoading(false);
-        setSession(null);
-        return;
+      } finally {
+        setLoading(false);
       }
-      setSession({ user } as Session);
-
-      type DBProfile = {
-        id: string;
-        github_username?: string | null;
-        display_name?: string | null;
-        bio?: string | null;
-        skills?: string | null;
-        role_preference?: string | null;
-        interests?: string | null;
-        avatar_url?: string | null;
-        is_onboarded?: boolean | null;
-      } | null;
-
-      const { data: userProfile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .maybeSingle<DBProfile>();
-
-      const github_username = user.user_metadata?.user_name || user.user_metadata?.preferred_username || 'newuser';
-      const avatar_url = user.user_metadata?.avatar_url || '';
-      const display_name = user.user_metadata?.name || github_username || 'New User';
-
-      const fallbackProfile: ProfileShape = {
-        id: user.id,
-        github_username,
-        display_name,
-        bio: (userProfile?.bio as string) || '',
-        skills: (userProfile?.skills as string) || '',
-        role_preference: (userProfile?.role_preference as string) || '',
-        interests: (userProfile?.interests as string) || '',
-        avatar_url,
-      };
-
-      if (!userProfile) {
-        await supabase.from('users').insert([{ ...fallbackProfile, is_onboarded: false }]);
-        setProfile(fallbackProfile);
-      } else {
-        await supabase.from('users').update({ ...fallbackProfile }).eq('id', user.id);
-        setProfile({ ...fallbackProfile });
-      }
-
-      setLoading(false);
     };
     getSessionAndProfile();
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
-    if (!loading && !session) {
+    if (!loading && !isAuthenticated) {
       router.push('/auth/login');
     }
-  }, [loading, session, router]);
+  }, [loading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (!loading && profile?.is_onboarded) {
+      router.replace('/dashboard');
+      router.refresh();
+    }
+  }, [loading, profile, router]);
 
   // Define the expected profile type
   interface ProfileShape {
@@ -94,6 +94,7 @@ export default function OnboardPage() {
     role_preference: string;
     interests: string;
     avatar_url?: string;
+    is_onboarded?: boolean;
   }
 
   function isProfileShape(obj: unknown): obj is ProfileShape {
@@ -111,14 +112,29 @@ export default function OnboardPage() {
   }
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (!session) {
+  if (!isAuthenticated) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p>You must be logged in to onboard. Redirecting...</p>
       </div>
     );
   }
-  if (!profile && !loading) return <p className="text-center mt-10 text-red-500">Profile not found or error loading profile. Check your Supabase users table and triggers.</p>;
+  if (bootstrapError) {
+    return (
+      <div className="max-w-xl mx-auto mt-16 p-6 rounded-xl border border-red-300 bg-red-50 text-red-700">
+        <p className="font-semibold mb-2">Unable to load profile</p>
+        <p className="text-sm mb-4">{bootstrapError}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+  if (!profile && !loading) return <p className="text-center mt-10 text-red-500">Profile not found or error loading profile.</p>;
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">

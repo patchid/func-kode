@@ -16,7 +16,13 @@ export function Navbar() {
 
   useEffect(() => {
     const supabase = createClientComponentClient();
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    supabase.auth
+      .getUser()
+      .then(({ data }) => setUser(data.user))
+      .catch((err) => {
+        console.error("Unable to load navbar auth user:", err);
+        setUser(null);
+      });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });

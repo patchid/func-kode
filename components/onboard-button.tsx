@@ -24,7 +24,7 @@ export function OnboardButton() {
 
         // Check if user has completed onboarding by looking for their profile
         const { data: userProfile } = await supabase
-          .from('users')
+          .from('profiles')
           .select('is_onboarded')
           .eq('id', user.id)
           .maybeSingle();

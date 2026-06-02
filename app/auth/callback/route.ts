@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { normalizeRedirectPath } from '@/lib/supabase/oauth'
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
+  const nextPath = normalizeRedirectPath(url.searchParams.get('next'))
   const origin = url.origin
 
   console.log('=== AUTH CALLBACK START ===');
@@ -17,8 +19,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/auth/login?error=no_code`)
   }
 
-  const cookieStore = cookies()
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+  const cookieStore = await cookies()
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore as any })
 
   const { data, error } = await supabase.auth.exchangeCodeForSession(code)
   if (error || !data.session) {
@@ -33,5 +35,5 @@ export async function GET(request: NextRequest) {
   });
 
   console.log('=== AUTH CALLBACK SUCCESS - REDIRECTING ===');
-  return NextResponse.redirect(`${origin}/dashboard`)
+  return NextResponse.redirect(`${origin}${nextPath}`)
 }

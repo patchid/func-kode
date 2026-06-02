@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,25 +19,30 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createClientComponentClient();
-    
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
+      const response = await fetch("/api/profile", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (response.status === 401) {
         router.push("/auth/login");
         return;
       }
 
-      // Get user profile
-      const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+      if (!response.ok) {
+        router.push("/onboard");
+        return;
+      }
 
+      const body = await response.json().catch(() => ({}));
+      const profile = body?.profile as UserProfile | undefined;
       if (profile) {
         setProfile(profile);
+      } else {
+        router.push("/onboard");
+        return;
       }
 
       setLoading(false);

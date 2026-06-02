@@ -153,7 +153,18 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-### 3. Test the Flow
+### 3. Enable GitHub OAuth in Supabase
+Before testing login, enable the provider in your Supabase dashboard:
+1. Open **Authentication → Providers → GitHub**.
+2. Toggle GitHub on.
+3. Paste the GitHub OAuth App **Client ID** and **Client Secret**.
+4. In **Authentication → URL Configuration**, add:
+   - `http://localhost:3000/auth/callback`
+   - `https://your-production-domain/auth/callback`
+5. Set **Site URL** to `http://localhost:3000` for local development.
+6. Confirm the same callback URLs are allowed in the GitHub OAuth App settings.
+
+### 4. Test the Flow
 1. Start the development server: `npm run dev`
 2. Navigate to `/submit-project`
 3. Log in with GitHub OAuth

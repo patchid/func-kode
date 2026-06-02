@@ -1,0 +1,63 @@
+http:
+  routers:
+    auth-router:
+      entryPoints:
+        - web
+      rule: PathPrefix(`/auth/v1`)
+      service: auth-service
+      middlewares:
+        - auth-strip
+        - cors
+
+    rest-router:
+      entryPoints:
+        - web
+      rule: PathPrefix(`/rest/v1`)
+      service: rest-service
+      middlewares:
+        - rest-strip
+        - cors
+
+  middlewares:
+    auth-strip:
+      stripPrefix:
+        prefixes:
+          - /auth/v1
+
+    rest-strip:
+      stripPrefix:
+        prefixes:
+          - /rest/v1
+
+    cors:
+      headers:
+        accessControlAllowOriginList:
+          - http://localhost:3000
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+        accessControlAllowHeaders:
+          - Authorization
+          - apikey
+          - Content-Type
+          - X-Client-Info
+          - X-Supabase-Api-Version
+          - Prefer
+        accessControlAllowCredentials: true
+        accessControlMaxAge: 600
+        addVaryHeader: true
+
+  services:
+    auth-service:
+      loadBalancer:
+        servers:
+          - url: http://auth:9999
+
+    rest-service:
+      loadBalancer:
+        servers:
+          - url: http://rest:3000

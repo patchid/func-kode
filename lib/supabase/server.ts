@@ -5,10 +5,10 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // Helper to get the correct redirect URL for OAuth
 export function getOAuthRedirectPath(path: string = "/dashboard") {
-  // Use NEXT_PUBLIC_SITE_URL if set, otherwise fallback to VERCEL_URL or localhost
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-  return `${baseUrl.replace(/\/$/, "")}${path}`;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${baseUrl.replace(/\/$/, "")}${normalizedPath}`;
 }
 
 export const createClient = (cookieStore: { getAll: () => { name: string; value: string; options?: object }[]; set: (name: string, value: string, options?: object) => void; }) => {

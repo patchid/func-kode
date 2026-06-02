@@ -2,26 +2,50 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import {
+  buildOAuthCallbackUrl,
+  GITHUB_OAUTH_SCOPES,
+  getGithubOAuthErrorMessage,
+} from "@/lib/supabase/oauth";
 
 export function LoginForm() {
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const handleGithubLogin = async () => {
-    const supabase = createClientComponentClient();
+    setLoading(true);
+    setErrorMsg(null);
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        scopes: "read:user user:email repo read:discussion",
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const supabase = createClientComponentClient();
+      const origin = window.location.origin;
+      const params = new URLSearchParams(window.location.search);
+      const nextParam = params.get("redirect") || params.get("next") || "/dashboard";
 
-    if (error) {
-      console.error("OAuth error:", error.message);
-      return;
-    }
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+        options: {
+          scopes: GITHUB_OAUTH_SCOPES,
+          redirectTo: buildOAuthCallbackUrl(origin, nextParam),
+        },
+      });
 
-    if (data?.url) {
-      window.location.href = data.url;
+      if (error) {
+        setErrorMsg(getGithubOAuthErrorMessage(error.message));
+        return;
+      }
+
+      if (data?.url) {
+        window.location.href = data.url;
+        return;
+      }
+
+      setErrorMsg("No redirect URL returned. Please retry.");
+    } catch (e) {
+      setErrorMsg("Unexpected error starting GitHub sign-in.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,10 +54,12 @@ export function LoginForm() {
       <Button
         type="button"
         onClick={handleGithubLogin}
+        disabled={loading}
         className="w-full bg-gray-900 hover:bg-gray-800 text-white"
       >
-        Sign in with GitHub
+        {loading ? "Redirecting to GitHub…" : "Sign in with GitHub"}
       </Button>
+      {errorMsg && <p className="text-sm text-red-500 text-center">{errorMsg}</p>}
     </div>
   );
 }

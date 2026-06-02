@@ -1,4 +1,56 @@
--- Create the RSVP responses table
+-- Create the core Supabase schemas first
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS storage;
+CREATE SCHEMA IF NOT EXISTS graphql_public;
+
+DO $$ BEGIN
+    CREATE ROLE anon NOLOGIN;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    CREATE ROLE authenticated NOLOGIN;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    CREATE ROLE service_role NOLOGIN;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+CREATE TABLE IF NOT EXISTS auth.users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT,
+    encrypted_password TEXT,
+    email_confirmed_at TIMESTAMPTZ,
+    raw_app_meta_data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    raw_user_meta_data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE OR REPLACE FUNCTION auth.uid()
+RETURNS UUID
+LANGUAGE sql
+STABLE
+AS $$
+    SELECT COALESCE(
+        NULLIF(current_setting('request.jwt.claim.sub', true), '')::uuid,
+        (NULLIF(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub')::uuid
+    )
+$$;
+
+CREATE OR REPLACE FUNCTION auth.jwt()
+RETURNS JSONB
+LANGUAGE sql
+STABLE
+AS $$
+    SELECT COALESCE(
+        NULLIF(current_setting('request.jwt.claims', true), '')::jsonb,
+        '{}'::jsonb
+    )
+$$;
+
 CREATE TABLE IF NOT EXISTS rsvp_responses (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
