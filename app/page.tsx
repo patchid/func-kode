@@ -10,6 +10,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { EventAnnouncementPopup } from "@/components/landing/event-announcement-popup";
 
 export default function HomePage() {
 
@@ -91,6 +92,7 @@ export default function HomePage() {
 
   return (
     <main className="bg-gradient-to-br from-background via-background to-muted/20">
+      <EventAnnouncementPopup />
       <div className="container mx-auto container-mobile py-8 md:py-12 safe-bottom">
         {/* Hero Section */}
         <section className="w-full max-w-4xl mx-auto flex flex-col items-center text-center gap-6 md:gap-8 animate-scale-in">
