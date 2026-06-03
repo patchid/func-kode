@@ -3,6 +3,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import posthog from "posthog-js";
 import {
   buildOAuthCallbackUrl,
   GITHUB_OAUTH_SCOPES,
@@ -18,6 +19,8 @@ export function LoginForm() {
     setErrorMsg(null);
 
     try {
+      posthog.capture('login_attempt', { method: 'github' });
+
       const supabase = createClientComponentClient();
       const origin = window.location.origin;
       const params = new URLSearchParams(window.location.search);
@@ -32,6 +35,7 @@ export function LoginForm() {
       });
 
       if (error) {
+        posthog.capture('login_failed', { method: 'github', error: error.message });
         setErrorMsg(getGithubOAuthErrorMessage(error.message));
         return;
       }

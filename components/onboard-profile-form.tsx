@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import posthog from "posthog-js";
 
 export default function OnboardProfileForm({
   initialProfile,
@@ -43,9 +44,15 @@ export default function OnboardProfileForm({
     e.stopPropagation();
     setLoading(true);
     setError(null);
-    
+
     try {
       console.log('Submitting onboarding form...');
+      posthog.capture('onboarding_started', { 
+        role_preference: form.role_preference,
+        has_bio: !!form.bio,
+        has_skills: !!form.skills
+      });
+
       const payload = {
         github_username: form.github_username,
         display_name: form.display_name,
@@ -63,11 +70,12 @@ export default function OnboardProfileForm({
         },
         body: JSON.stringify(payload),
       });
-      
+
       setLoading(false);
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
         console.error('Profile API upsert error:', body?.error || response.statusText);
+        posthog.capture('onboarding_failed', { error: body?.error || response.statusText });
         setError(`Failed to update profile: ${body?.error || response.statusText}`);
         return;
       }
@@ -77,10 +85,14 @@ export default function OnboardProfileForm({
         return;
       }
       console.log('Onboarding successful, redirecting...');
+      posthog.capture('onboarding_completed', { role_preference: form.role_preference });
       router.replace("/dashboard");
       router.refresh();
     } catch (err) {
       console.error('Unexpected error:', err);
+      posthog.capture('onboarding_error', { 
+        error: err instanceof Error ? err.message : 'Unknown error'
+      });
       setLoading(false);
       setError(`Unexpected error: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }

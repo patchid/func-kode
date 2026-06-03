@@ -6,7 +6,8 @@ import { normalizeRedirectPath } from '@/lib/supabase/oauth'
 export async function GET(request: NextRequest) {
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
-  const nextPath = normalizeRedirectPath(url.searchParams.get('next'))
+  const rawNext = url.searchParams.get('next') || '/dashboard'
+  const nextPath = normalizeRedirectPath(rawNext)
   const origin = url.origin
 
   console.log('=== AUTH CALLBACK START ===');

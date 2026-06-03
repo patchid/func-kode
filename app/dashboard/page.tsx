@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import posthog from "posthog-js";
 
 interface UserProfile {
   id: string;
@@ -40,6 +41,7 @@ export default function DashboardPage() {
       const profile = body?.profile as UserProfile | undefined;
       if (profile) {
         setProfile(profile);
+        posthog.capture('dashboard_viewed', { username: profile.github_username, onboarded: profile.is_onboarded });
       } else {
         router.push("/onboard");
         return;
@@ -99,6 +101,7 @@ export default function DashboardPage() {
         <Link 
           href="/projects" 
           className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border"
+          onClick={() => posthog.capture('dashboard_action_clicked', { action: 'view_projects' })}
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-brand-blue rounded-lg flex items-center justify-center">
@@ -114,6 +117,7 @@ export default function DashboardPage() {
         <Link 
           href="/onboard" 
           className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border"
+          onClick={() => posthog.capture('dashboard_action_clicked', { action: 'complete_profile' })}
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-brand-green rounded-lg flex items-center justify-center">
@@ -129,6 +133,7 @@ export default function DashboardPage() {
         <Link 
           href="/events" 
           className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border"
+          onClick={() => posthog.capture('dashboard_action_clicked', { action: 'join_events' })}
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
