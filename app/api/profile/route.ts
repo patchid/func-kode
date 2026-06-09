@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import crypto from "crypto";
 
 type ProfileRecord = {
@@ -110,9 +109,7 @@ export async function GET() {
       return NextResponse.json({ error: "Missing Supabase server configuration" }, { status: 500 });
     }
 
-    const cookieStore = await cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore as any });
-
+    const supabase = await createServerSupabaseClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -149,9 +146,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing Supabase server configuration" }, { status: 500 });
     }
 
-    const cookieStore = await cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore as any });
-
+    const supabase = await createServerSupabaseClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
