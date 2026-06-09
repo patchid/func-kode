@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -56,6 +57,17 @@ export default {
           green: "#34C759",
           gray: "#F7F7F7",
         },
+        // Landing page color tokens (Figma spec)
+        landing: {
+          label:   "#EDFFD7", // label green badge background
+          teal:    "#00C9B7", // teal accent / CTA highlight
+          purple:  "#7020BF", // purple accent
+          dark:    "#040710", // page background
+          surface: "#111B34", // card / section surface
+          border:  "#1C273A", // border / divider
+          muted:   "#A1A7B7", // secondary text
+          fg:      "#FCFCFC", // primary foreground text
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,7 +77,27 @@ export default {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
+      fontSize: {
+        // Landing page typography tokens (Figma spec)
+        "landing-hero":   ["46px", { lineHeight: "54.1px" }],
+        "landing-h1-md":  ["40px", { lineHeight: "48px" }],
+        "landing-h1-sm":  ["32px", { lineHeight: "1.18" }],
+        "landing-label":  ["14px", { lineHeight: "1", letterSpacing: "-0.48px", fontWeight: "700" }],
+        "landing-body":   ["16px", { lineHeight: "25.4px", letterSpacing: "-0.48px" }],
+      },
+      letterSpacing: {
+        // Landing page tracking tokens (Figma spec)
+        "landing-tight": "-0.48px",
+        "landing-h1":    "-1.38px",
+        "landing-cta":   "-0.45px",
+        "landing-badge": "-0.36px",
+      },
+      spacing: {
+        // Landing page spacing tokens
+        "landing-cta":    "47px",   // gap between CTA buttons
+        "landing-canvas": "122px",  // hero left padding (1440px canvas inset)
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

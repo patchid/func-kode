@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Users, MapPin } from "lucide-react";
@@ -34,7 +34,7 @@ export default function EventPage() {
     if (!eventId) return;
 
     try {
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const { data, error } = await supabase
         .from('events')
         .select('*')

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ export default function EventsPage() {
 
   const fetchEvents = async () => {
     try {
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       
       // Fetch events
       const { data: eventsData, error: eventsError } = await supabase

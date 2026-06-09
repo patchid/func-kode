@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import { ReactNode } from "react";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -15,7 +16,7 @@ export function Providers({ children }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <PostHogProvider>{children}</PostHogProvider>
     </ThemeProvider>
   );
 }

@@ -1,10 +1,9 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore as any });
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -13,6 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/auth/login?redirect=/dashboard");
   }
 
+  const cookieStore = await cookies();
   const origin =
     process.env.NEXT_PUBLIC_SITE_URL ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");

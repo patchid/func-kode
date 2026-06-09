@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -105,7 +105,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-brand-blue rounded-lg flex items-center justify-center">
-              <span className="text-2xl text-white">🚀</span>
+              <span className="text-2xl text-white">≡ƒÜÇ</span>
             </div>
             <div>
               <h3 className="font-semibold text-lg">View Projects</h3>
@@ -121,7 +121,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-brand-green rounded-lg flex items-center justify-center">
-              <span className="text-2xl text-white">👤</span>
+              <span className="text-2xl text-white">≡ƒæñ</span>
             </div>
             <div>
               <h3 className="font-semibold text-lg">Complete Profile</h3>
@@ -137,7 +137,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-2xl text-white">📅</span>
+              <span className="text-2xl text-white">≡ƒôà</span>
             </div>
             <div>
               <h3 className="font-semibold text-lg">Join Events</h3>
@@ -175,25 +175,25 @@ export default function DashboardPage() {
         <div className="space-y-3">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm">✓</span>
+              <span className="text-white text-sm">Γ£ô</span>
             </div>
             <span>Sign in with GitHub</span>
           </div>
           <div className="flex items-center gap-3">
             <div className={`w-6 h-6 ${profile?.is_onboarded ? 'bg-green-500' : 'bg-gray-300'} rounded-full flex items-center justify-center`}>
-              <span className="text-white text-sm">{profile?.is_onboarded ? '✓' : '○'}</span>
+              <span className="text-white text-sm">{profile?.is_onboarded ? 'Γ£ô' : 'Γùï'}</span>
             </div>
             <span>Complete your profile</span>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm">○</span>
+              <span className="text-white text-sm">Γùï</span>
             </div>
             <span>Star our GitHub repository</span>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm">○</span>
+              <span className="text-white text-sm">Γùï</span>
             </div>
             <span>Join your first sprint</span>
           </div>

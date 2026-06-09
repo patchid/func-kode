@@ -1,6 +1,6 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import posthog from "posthog-js";
@@ -19,9 +19,9 @@ export function LoginForm() {
     setErrorMsg(null);
 
     try {
-      posthog.capture('login_attempt', { method: 'github' });
+      posthog.capture("login_attempt", { method: "github" });
 
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const origin = window.location.origin;
       const params = new URLSearchParams(window.location.search);
       const nextParam = params.get("redirect") || params.get("next") || "/dashboard";
@@ -35,7 +35,7 @@ export function LoginForm() {
       });
 
       if (error) {
-        posthog.capture('login_failed', { method: 'github', error: error.message });
+        posthog.capture("login_failed", { method: "github", error: error.message });
         setErrorMsg(getGithubOAuthErrorMessage(error.message));
         return;
       }
@@ -46,7 +46,7 @@ export function LoginForm() {
       }
 
       setErrorMsg("No redirect URL returned. Please retry.");
-    } catch (e) {
+    } catch {
       setErrorMsg("Unexpected error starting GitHub sign-in.");
     } finally {
       setLoading(false);

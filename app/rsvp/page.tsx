@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -83,7 +83,7 @@ function RSVPPageContent() {
     if (!eventId) return;
     
     try {
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const { data, error } = await supabase
         .from('events')
         .select('*')
@@ -102,7 +102,7 @@ function RSVPPageContent() {
   }, [eventId]);
 
   useEffect(() => {
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
     
     // Fetch user data
     supabase.auth.getUser().then(({ data }) => {
@@ -190,7 +190,7 @@ function RSVPPageContent() {
     }
 
     try {
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const { error } = await supabase.from('rsvp_responses').insert([
         { 
           name, 

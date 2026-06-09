@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 
 type Blog = {
   id: string;
@@ -20,7 +20,7 @@ export default function BlogListPage() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const { data } = await supabase
         .from("blogs")
         .select("id, slug, title, excerpt, image, author, date")

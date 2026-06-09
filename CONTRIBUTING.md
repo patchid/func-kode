@@ -38,6 +38,8 @@ npm install
 
 **Important**: Create your local environment file and add the required variables and then start the app.
 
+For the full environment variable table, see [docs/contributing/how-to-contribute.md](docs/contributing/how-to-contribute.md).
+
 ### 3. Run the App
 
 ```bash
