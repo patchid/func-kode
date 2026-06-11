@@ -172,7 +172,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Getting Started */}
-      <div className="bg-gradient-to-r from-brand-blue/10 to-brand-purple/10 p-6 rounded-2xl border border-border">
+      <div className="bg-gradient-to-r from-brand-blue/10 to-primary/10 p-6 rounded-2xl border border-border">
         <h2 className="text-xl font-semibold mb-4">Getting Started</h2>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
