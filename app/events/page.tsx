@@ -112,15 +112,15 @@ export default function EventsPage() {
 
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <Card className="text-center border-0 shadow-lg bg-gradient-to-br from-brand-blue/10 to-primary/10">
+          <Card className="text-center border border-border shadow-lg bg-gradient-to-br from-brand-blue/10 to-primary/10">
             <CardContent className="p-6">
-              <div className="text-3xl font-bold text-brand-blue mb-2">
+              <div className="text-3xl font-bold text-brand-blue dark:text-white mb-2">
                 {upcomingEvents.length}
               </div>
               <p className="text-muted-foreground">Upcoming Events</p>
             </CardContent>
           </Card>
-          <Card className="text-center border-0 shadow-lg bg-gradient-to-br from-brand-green/10 to-brand-green/5">
+          <Card className="text-center border border-border shadow-lg bg-gradient-to-br from-brand-green/10 to-brand-green/5">
             <CardContent className="p-6">
               <div className="text-3xl font-bold text-brand-green mb-2">
                 {events.reduce((sum, event) => sum + (event.attendees || 0), 0)}
@@ -128,7 +128,7 @@ export default function EventsPage() {
               <p className="text-muted-foreground">Total Attendees</p>
             </CardContent>
           </Card>
-          <Card className="text-center border-0 shadow-lg bg-gradient-to-br from-primary/10 to-muted/10">
+          <Card className="text-center border border-border shadow-lg bg-gradient-to-br from-primary/10 to-muted/10">
             <CardContent className="p-6">
               <div className="text-3xl font-bold text-primary mb-2">
                 {events.length}
@@ -281,7 +281,7 @@ export default function EventsPage() {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pastEvents.map((event, index) => (
-                <Card key={event.id} className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-scale-in`} style={{animationDelay: `${index * 0.1}s`}}>
+                <Card key={event.id} className={`border border-border shadow-lg hover:shadow-xl transition-all duration-300 animate-scale-in`} style={{animationDelay: `${index * 0.1}s`}}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
@@ -295,12 +295,12 @@ export default function EventsPage() {
                       </div>
                     </div>
                     
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    <p className="text-base text-muted-foreground mb-4 line-clamp-2">
                       {event.description}
                     </p>
                     
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Users className="w-3 h-3" />
                         <span>{event.attendees || 0} attended</span>
                       </div>

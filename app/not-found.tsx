@@ -16,8 +16,8 @@ export default function NotFound() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-6">
           <div className="animate-bounce">
             <Image
-              src="/raccoon.png"
-              alt="Lost raccoon"
+              src="/landing/logo.png"
+              alt="func(Kode) Logo"
               width={120}
               height={120}
               className="w-24 h-24 md:w-30 md:h-30 drop-shadow-lg"

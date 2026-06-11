@@ -51,18 +51,15 @@ export default function SubmitProjectPage() {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Check authentication status
     useEffect(() => {
         const getUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
             setIsLoading(false);
-            
+
             if (!user) {
-                // Redirect to login if not authenticated
                 router.push('/auth/login?redirect=/submit-project');
             } else {
-                // Pre-fill author information if user is logged in
                 setFormData(prev => ({
                     ...prev,
                     authorName: getAuthorName(user),
@@ -73,7 +70,6 @@ export default function SubmitProjectPage() {
         getUser();
     }, [router, supabase]);
 
-    // Helper function to safely handle string operations
     const safeString = (value: unknown): string => {
         return typeof value === 'string' ? value : '';
     };
@@ -106,8 +102,7 @@ export default function SubmitProjectPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        // Check if user is still authenticated
+
         if (!user) {
             router.push('/auth/login?redirect=/submit-project');
             return;
@@ -119,7 +114,6 @@ export default function SubmitProjectPage() {
         try {
             setErrorMessage('');
 
-            // Validate required fields
             const requiredFields = ['title', 'description', 'longDescription', 'githubUrl', 'language', 'authorName', 'authorEmail'];
             const missingFields = requiredFields.filter(field => !safeString(formData[field as keyof typeof formData]).trim());
 
@@ -127,7 +121,6 @@ export default function SubmitProjectPage() {
                 throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
             }
 
-            // Process tags safely
             const tagsString = safeString(formData.tags).trim();
             const processedTags = tagsString
                 ? tagsString.split(',').map(tag => safeString(tag).trim()).filter(Boolean)
@@ -137,7 +130,6 @@ export default function SubmitProjectPage() {
                 throw new Error('At least one tag is required');
             }
 
-            // Validate session server-side, then read access_token from local session cache
             const { data: { user: currentUser }, error: authError } = await supabase.auth.getUser();
             if (authError || !currentUser) {
                 router.push('/auth/login?redirect=/submit-project');
@@ -160,7 +152,6 @@ export default function SubmitProjectPage() {
 
             if (response.ok) {
                 setSubmitStatus('success');
-                // Reset form on successful submission
                 setFormData({
                     title: "",
                     description: "",
@@ -174,8 +165,7 @@ export default function SubmitProjectPage() {
                     authorName: getAuthorName(user),
                     authorEmail: user.email || ''
                 });
-                
-                // Redirect to projects page after successful submission
+
                 setTimeout(() => {
                     router.push('/projects');
                 }, 3000);
@@ -194,7 +184,6 @@ export default function SubmitProjectPage() {
         }
     };
 
-    // Show loading while checking authentication
     if (isLoading) {
         return (
             <div className="bg-gradient-to-br from-background to-muted/20">
@@ -210,7 +199,6 @@ export default function SubmitProjectPage() {
         );
     }
 
-    // Don't render the form if user is not authenticated (will redirect)
     if (!user) {
         return null;
     }
@@ -269,7 +257,7 @@ export default function SubmitProjectPage() {
                 )}
 
                 {/* Submission Form */}
-                <Card className="border-0 shadow-xl card-hover">
+                <Card className="shadow-xl card-hover">
                     <CardHeader className="pb-4 md:pb-6 px-4 md:px-6">
                         <CardTitle className="text-xl md:text-2xl font-bold text-foreground">Project Details</CardTitle>
                         <p className="text-sm md:text-base text-muted-foreground">
@@ -489,7 +477,7 @@ export default function SubmitProjectPage() {
                                     type="submit"
                                     size="lg"
                                     disabled={isSubmitting}
-                                    className="bg-gradient-to-r from-brand-green to-brand-green/80 hover:shadow-lg"
+                                    className="w-full md:w-auto bg-gradient-to-r from-brand-green to-brand-green/80 hover:shadow-lg"
                                 >
                                     {isSubmitting ? (
                                         <>
@@ -509,7 +497,7 @@ export default function SubmitProjectPage() {
                 </Card>
 
                 {/* Guidelines */}
-                <Card className="mt-8 border-0 shadow-lg bg-muted/50">
+                <Card className="mt-8 mb-12 shadow-lg bg-muted/50">
                     <CardContent className="p-6">
                         <h3 className="text-lg font-semibold mb-4">Submission Guidelines</h3>
                         <div className="grid md:grid-cols-2 gap-6 text-sm text-muted-foreground">

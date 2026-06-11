@@ -23,16 +23,15 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const supabase = createClient();
-    
+
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         router.push("/auth/login");
         return;
       }
 
-      // Get user profile
       const { data: profile } = await supabase
         .from('users')
         .select('*')
@@ -60,11 +59,11 @@ export default function DashboardPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Image 
-            src="/raccoon.png" 
-            alt="func(Kode) Raccoon" 
-            width={48} 
-            height={48} 
+          <Image
+            src="/landing/logo.png"
+            alt="func(Kode) Logo"
+            width={48}
+            height={48}
             className="animate-bounce"
           />
           <p className="text-muted-foreground">Loading your dashboard...</p>
@@ -74,19 +73,19 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
+    <main className="max-w-4xl mx-auto px-4 py-12">
       {/* Welcome Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-4 mb-4">
-          <Image 
-            src={profile?.avatar_url || "/raccoon.png"} 
-            alt="Profile" 
-            width={80} 
-            height={80} 
+          <Image
+            src={profile?.avatar_url || "/landing/logo.png"}
+            alt="Profile"
+            width={80}
+            height={80}
             className="rounded-full border-4 border-brand-blue shadow-lg"
           />
           <div>
-            <h1 className="text-3xl font-bold text-brand-blue">
+            <h1 className="text-3xl font-bold text-brand-blue dark:text-white">
               Welcome, {profile?.display_name || "Developer"}!
             </h1>
             {profile?.github_username && (
@@ -101,9 +100,9 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <Link 
-          href="/projects" 
-          className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border"
+        <Link
+          href="/projects"
+          className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-border"
           onClick={() => track(ANALYTICS_EVENTS.DASHBOARD_ACTION_CLICKED, { action: "view_projects" })}
         >
           <div className="flex items-center gap-4">
@@ -117,9 +116,9 @@ export default function DashboardPage() {
           </div>
         </Link>
 
-        <Link 
-          href="/onboard" 
-          className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border"
+        <Link
+          href="/onboard"
+          className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-border"
           onClick={() => track(ANALYTICS_EVENTS.DASHBOARD_ACTION_CLICKED, { action: "complete_profile" })}
         >
           <div className="flex items-center gap-4">
@@ -133,9 +132,9 @@ export default function DashboardPage() {
           </div>
         </Link>
 
-        <Link 
-          href="/events" 
-          className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border"
+        <Link
+          href="/events"
+          className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-border"
           onClick={() => track(ANALYTICS_EVENTS.DASHBOARD_ACTION_CLICKED, { action: "join_events" })}
         >
           <div className="flex items-center gap-4">
@@ -151,7 +150,7 @@ export default function DashboardPage() {
       </div>
 
       {/* GitHub Integration */}
-      <div className="bg-card p-6 rounded-2xl shadow-lg border mb-8">
+      <div className="bg-card p-6 rounded-2xl shadow-lg border border-border mb-8">
         <h2 className="text-xl font-semibold mb-4">GitHub Integration</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -173,7 +172,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Getting Started */}
-      <div className="bg-gradient-to-r from-brand-blue/10 to-brand-purple/10 p-6 rounded-2xl border">
+      <div className="bg-gradient-to-r from-brand-blue/10 to-brand-purple/10 p-6 rounded-2xl border border-border">
         <h2 className="text-xl font-semibold mb-4">Getting Started</h2>
         <div className="space-y-3">
           <div className="flex items-center gap-3">

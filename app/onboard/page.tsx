@@ -124,22 +124,22 @@ export default function OnboardPage() {
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-8 border border-zinc-200 dark:border-zinc-800 transition-colors">
-        <h1 className="text-4xl font-extrabold mb-2 text-brand-blue tracking-tight">Welcome to funcKode Onboarding 🚀</h1>
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-8 border border-zinc-200 dark:border-zinc-700 transition-colors">
+        <h1 className="text-3xl font-bold mb-2 text-brand-blue dark:text-white tracking-tight">Welcome to funcKode Onboarding 🚀</h1>
         <section className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Step-by-Step Visual Guidelines</h2>
           <ol className="list-decimal ml-6 space-y-4">
             <li>
               <span className="font-semibold">How to Fork:</span> <br />
-              <span className="text-sm">Visit our <a href="https://github.com/func-Kode/site" className="text-brand-blue underline">GitHub repo</a> and click <span className="bg-gray-200 px-2 py-1 rounded">Fork</span> at the top right.</span>
+              <span>Visit our <a href="https://github.com/func-Kode/site" className="text-brand-blue dark:text-brand-green underline">GitHub repo</a> and click <span className="bg-gray-200 dark:bg-zinc-700 dark:text-white px-2 py-1 rounded">Fork</span> at the top right.</span>
             </li>
             <li>
               <span className="font-semibold">How to Contribute:</span> <br />
-              <span className="text-sm">Clone your fork, create a new branch, make changes, and open a pull request. See our <a href="/CONTRIBUTING" className="text-brand-blue underline">Contributing Guide</a>.</span>
+              <span>Clone your fork, create a new branch, make changes, and open a pull request. See our <a href="/CONTRIBUTING" className="text-brand-blue dark:text-brand-green underline">Contributing Guide</a>.</span>
             </li>
             <li>
               <span className="font-semibold">Join Sprints:</span> <br />
-              <span className="text-sm">Check the <Link href="/events" className="text-brand-blue underline">Events</Link> page for upcoming sprints and join the fun!</span>
+              <span>Check the <Link href="/events" className="text-brand-blue dark:text-brand-green underline">Events</Link> page for upcoming sprints and join the fun!</span>
             </li>
           </ol>
         </section>
@@ -147,10 +147,10 @@ export default function OnboardPage() {
           <h2 className="text-2xl font-bold mb-4">Quick Start Checklist</h2>
           <ul className="list-disc ml-6 space-y-2">
             <li>Login to your account</li>
-            <li>Star our <a href="https://github.com/func-Kode/site" className="text-brand-blue underline">GitHub repo</a></li>
-            <li>Join our <a href="https://discord.gg/nnkA8xJ3JU" target="_blank" rel="noopener noreferrer" className="text-brand-blue underline">Discord community</a> for help and discussions</li>
-            <li>Introduce yourself in the <a href="/discussion" className="text-brand-blue underline">community discussion</a></li>
-            <li>Join the next sprint via <Link href="/events" className="text-brand-blue underline">Events</Link></li>
+            <li>Star our <a href="https://github.com/func-Kode/site" className="text-brand-blue dark:text-brand-green underline">GitHub repo</a></li>
+            <li>Join our <a href="https://discord.gg/nnkA8xJ3JU" target="_blank" rel="noopener noreferrer" className="text-brand-blue dark:text-brand-green underline">Discord community</a> for help and discussions</li>
+            <li>Introduce yourself in the <a href="/discussion" className="text-brand-blue dark:text-brand-green underline">community discussion</a></li>
+            <li>Join the next sprint via <Link href="/events" className="text-brand-blue dark:text-brand-green underline">Events</Link></li>
           </ul>
         </section>
         <section className="mb-8">
@@ -158,23 +158,23 @@ export default function OnboardPage() {
           <div className="space-y-6">
             <div>
               <h3 className="font-semibold">How do I participate?</h3>
-              <p className="text-sm">Fork the repo, make changes, and submit a pull request. Join sprints and discussions for more collaboration.</p>
+              <p>Fork the repo, make changes, and submit a pull request. Join sprints and discussions for more collaboration.</p>
             </div>
             <div>
               <h3 className="font-semibold">Troubleshooting</h3>
-              <p className="text-sm">Check our <a href="/CONTRIBUTING" className="text-brand-blue underline">Contributing Guide</a> and <a href="/discussion" className="text-brand-blue underline">community discussion</a> for help. If you encounter issues, open a GitHub issue or ask in the chat.</p>
+              <p>Check our <a href="/CONTRIBUTING" className="text-brand-blue dark:text-brand-green underline">Contributing Guide</a> and <a href="/discussion" className="text-brand-blue dark:text-brand-green underline">community discussion</a> for help. If you encounter issues, open a GitHub issue or ask in the chat.</p>
             </div>
             <div>
               <h3 className="font-semibold">Contact Information</h3>
-              <p className="text-sm">Reach out via <a href="mailto:hello@funckode.com" className="text-brand-blue underline">hello@funckode.com</a> or join our <a href="https://discord.gg/nnkA8xJ3JU" target="_blank" rel="noopener noreferrer" className="text-brand-blue underline">Discord community</a>.</p>
+              <p>Reach out via <a href="mailto:hello@funckode.com" className="text-brand-blue dark:text-brand-green underline">hello@funckode.com</a> or join our <a href="https://discord.gg/nnkA8xJ3JU" target="_blank" rel="noopener noreferrer" className="text-brand-blue dark:text-brand-green underline">Discord community</a>.</p>
             </div>
           </div>
         </section>
         <h2 className="text-2xl font-bold mb-4">Set up your profile</h2>
-        <p className="mb-6 text-zinc-600 dark:text-zinc-400 text-lg">Complete your profile to get the best experience and connect with the community.</p>
+        <p className="mb-6 text-muted-foreground text-lg">Complete your profile to get the best experience and connect with the community.</p>
         <div className="mb-8 flex items-center gap-4">
           <Image
-            src={profile?.avatar_url || '/raccoon.png'}
+            src={profile?.avatar_url || '/landing/logo.png'}
             alt="Avatar"
             width={80}
             height={80}
@@ -190,7 +190,7 @@ export default function OnboardPage() {
             <OnboardProfileForm initialProfile={profile} />
           )}
         </div>
-        <div className="text-center text-zinc-400 text-xs mt-6">
+        <div className="text-center text-muted-foreground text-sm mt-6">
           Your information is private and secure.
         </div>
       </div>

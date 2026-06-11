@@ -7,15 +7,15 @@
 
 @layer base {
   :root {
-    --background: #F7F7F7;
-    --foreground: #2E4053;
-    --brand-blue: #2E4053;
-    --brand-green: #34C759;
-    --brand-gray: #F7F7F7;
-    --brand-blue-foreground: #F7F7F7;
-    --brand-green-foreground: #2E4053;
-    --card: #fff;
-    --card-foreground: #2E4053;
+    --background: 0 0% 97%;
+    --foreground: 210 29% 25%;
+    --brand-blue: 210 29% 25%;
+    --brand-green: 135 59% 49%;
+    --brand-gray: 0 0% 97%;
+    --brand-blue-foreground: 0 0% 97%;
+    --brand-green-foreground: 210 29% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 29% 25%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 9%;
@@ -39,15 +39,15 @@
     --radius: 0.5rem;
   }
   .dark {
-    --background: #181C23;
-    --foreground: #F7F7F7;
-    --brand-blue: #A2B6DF;
-    --brand-green: #30E88D;
-    --brand-gray: #23272F;
-    --brand-blue-foreground: #181C23;
-    --brand-green-foreground: #181C23;
-    --card: #23272F;
-    --card-foreground: #F7F7F7;
+    --background: 218 19% 12%;
+    --foreground: 0 0% 97%;
+    --brand-blue: 220 49% 76%;
+    --brand-green: 150 80% 55%;
+    --brand-gray: 220 15% 16%;
+    --brand-blue-foreground: 218 19% 12%;
+    --brand-green-foreground: 218 19% 12%;
+    --card: 220 15% 16%;
+    --card-foreground: 0 0% 97%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;

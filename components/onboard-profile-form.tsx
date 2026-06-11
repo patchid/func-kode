@@ -92,47 +92,47 @@ export default function OnboardProfileForm({
       <form 
         onSubmit={handleSubmit} 
         action="#"
-        className="w-full max-w-lg bg-white shadow-xl rounded-2xl p-8 space-y-8 border border-gray-100 animate-fade-in"
+        className="w-full max-w-lg bg-white dark:bg-zinc-900 shadow-xl rounded-2xl p-8 space-y-8 border border-gray-100 dark:border-zinc-700 animate-fade-in"
       >
         <div className="flex flex-col items-center gap-2 mb-6">
           {form.avatar_url && (
             <Image src={form.avatar_url} alt="Avatar" width={72} height={72} className="rounded-full border-2 border-blue-500 shadow" />
           )}
-          <span className="text-lg font-semibold text-gray-800">@{form.github_username}</span>
-          <span className="text-sm text-gray-500">GitHub User</span>
+          <span className="text-lg font-semibold text-gray-800 dark:text-white">@{form.github_username}</span>
+          <span className="text-sm text-gray-500 dark:text-zinc-400">GitHub User</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block font-medium mb-1">Display Name</label>
-            <input name="display_name" value={form.display_name} onChange={handleChange} className="input input-bordered w-full" required placeholder="Your name" />
-            <p className="text-xs text-gray-400 mt-1">This will be shown on your profile.</p>
+            <label className="block font-medium mb-1 dark:text-zinc-200">Display Name</label>
+            <input name="display_name" value={form.display_name} onChange={handleChange} className="input input-bordered w-full dark:bg-zinc-800 dark:text-white dark:border-zinc-600" required placeholder="Your name" />
+            <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">This will be shown on your profile.</p>
           </div>
           <div>
-            <label className="block font-medium mb-1">Role Preference</label>
-            <select name="role_preference" value={form.role_preference} onChange={handleChange} className="input input-bordered w-full">
+            <label className="block font-medium mb-1 dark:text-zinc-200">Role Preference</label>
+            <select name="role_preference" value={form.role_preference} onChange={handleChange} className="input input-bordered w-full dark:bg-zinc-800 dark:text-white dark:border-zinc-600">
               <option value="">Select...</option>
               <option value="frontend">Frontend</option>
               <option value="backend">Backend</option>
               <option value="fullstack">Fullstack</option>
             </select>
-            <p className="text-xs text-gray-400 mt-1">What do you want to work on?</p>
+            <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">What do you want to work on?</p>
           </div>
         </div>
         <div>
-          <label className="block font-medium mb-1">Bio</label>
-          <textarea name="bio" value={form.bio} onChange={handleChange} className="input input-bordered w-full" rows={3} placeholder="Tell us about yourself..." />
-          <p className="text-xs text-gray-400 mt-1">A short intro for your profile.</p>
+          <label className="block font-medium mb-1 dark:text-zinc-200">Bio</label>
+          <textarea name="bio" value={form.bio} onChange={handleChange} className="input input-bordered w-full dark:bg-zinc-800 dark:text-white dark:border-zinc-600" rows={3} placeholder="Tell us about yourself..." />
+          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">A short intro for your profile.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block font-medium mb-1">Skills</label>
-            <input name="skills" value={form.skills} onChange={handleChange} className="input input-bordered w-full" placeholder="e.g. React, Node.js" />
-            <p className="text-xs text-gray-400 mt-1">Comma separated skills.</p>
+            <label className="block font-medium mb-1 dark:text-zinc-200">Skills</label>
+            <input name="skills" value={form.skills} onChange={handleChange} className="input input-bordered w-full dark:bg-zinc-800 dark:text-white dark:border-zinc-600" placeholder="e.g. React, Node.js" />
+            <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">Comma separated skills.</p>
           </div>
           <div>
-            <label className="block font-medium mb-1">Interests</label>
-            <input name="interests" value={form.interests} onChange={handleChange} className="input input-bordered w-full" placeholder="e.g. open source, ai, webdev" />
-            <p className="text-xs text-gray-400 mt-1">Comma separated interests/tags.</p>
+            <label className="block font-medium mb-1 dark:text-zinc-200">Interests</label>
+            <input name="interests" value={form.interests} onChange={handleChange} className="input input-bordered w-full dark:bg-zinc-800 dark:text-white dark:border-zinc-600" placeholder="e.g. open source, ai, webdev" />
+            <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">Comma separated interests/tags.</p>
           </div>
         </div>
         {error && <div className="text-red-500 text-sm text-center">{error}</div>}

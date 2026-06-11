@@ -31,19 +31,19 @@ export default function ProfilePage() {
 
   return (
     <main className="max-w-md mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-brand-blue dark:text-brand-blue mb-8 text-center">Profile</h1>
-      <form className="bg-white dark:bg-card rounded-lg shadow p-6 flex flex-col gap-4" onSubmit={handleSave}>
+      <h1 className="text-3xl font-bold text-brand-blue dark:text-white mb-8 text-center">Profile</h1>
+      <form className="bg-white dark:bg-card rounded-lg shadow border border-border p-6 flex flex-col gap-4" onSubmit={handleSave}>
         <div>
-          <label className="block text-sm font-medium text-brand-blue dark:text-brand-blue mb-1">Email</label>
+          <label className="block text-base font-medium text-brand-blue dark:text-gray-300 mb-1">Email</label>
           <input
             type="email"
             value={user?.email || ""}
             readOnly
-            className="w-full rounded border px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-500 cursor-not-allowed"
+            className="w-full rounded border px-3 py-2 bg-gray-100 dark:bg-gray-800 text-muted-foreground cursor-not-allowed"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-brand-blue dark:text-brand-blue mb-1">Name</label>
+          <label className="block text-base font-medium text-brand-blue dark:text-gray-300 mb-1">Name</label>
           <input
             type="text"
             value={name}
@@ -54,12 +54,12 @@ export default function ProfilePage() {
         </div>
         <button
           type="submit"
-          className="mt-2 px-4 py-2 rounded bg-brand-green text-white font-semibold hover:bg-brand-blue transition-colors"
+          className="px-4 py-2 rounded bg-brand-green text-white font-semibold hover:bg-brand-blue transition-colors"
           disabled={saving}
         >
           {saving ? "Saving..." : "Save"}
         </button>
-        {success && <div className="text-green-600 text-sm mt-2">Profile updated!</div>}
+        {success && <div className="text-green-600 text-sm">Profile updated!</div>}
       </form>
     </main>
   );

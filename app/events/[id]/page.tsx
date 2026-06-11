@@ -64,16 +64,20 @@ export default function EventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4">
-      <div className="container mx-auto max-w-3xl">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <div className="container mx-auto max-w-3xl px-4 py-12">
         <Card className="p-6 shadow-xl">
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl font-bold mb-4 text-foreground">{eventData.name}</h1>
-            <div className="flex items-center gap-2 text-muted-foreground mb-6">
-              <Calendar className="w-5 h-5" />
-              <span>{new Date(eventData.date).toLocaleDateString()} at {eventData.time}</span>
-              <MapPin className="w-5 h-5 ml-4" />
-              <span>{eventData.location}</span>
+            <h1 className="text-3xl font-bold mb-4 text-foreground">{eventData.name}</h1>
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-muted-foreground mb-6">
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                {new Date(eventData.date).toLocaleDateString()} at {eventData.time}
+              </span>
+              <span className="flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                {eventData.location}
+              </span>
             </div>
             <p className="text-muted-foreground mb-4 leading-relaxed text-center">{eventData.long_description}</p>
             <div className="flex flex-wrap gap-2 mb-6">
@@ -82,7 +86,7 @@ export default function EventPage() {
               ))}
             </div>
             {eventData.prizes && (
-              <div className="bg-muted/50 rounded-lg p-4 mt-4 w-full">
+              <div className="bg-muted/50 rounded-lg p-4 mt-6 w-full">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <Users className="w-4 h-4 text-brand-green" />
                   Prizes & Rewards
@@ -97,11 +101,11 @@ export default function EventPage() {
                 </ul>
               </div>
             )}
-            <div className="flex items-center gap-2 text-sm mt-4">
+            <div className="flex items-center gap-2 text-sm mt-6">
               <Users className="w-4 h-4 text-muted-foreground" />
               <span className="text-foreground">{eventData.attendees || 0}/{eventData.max_attendees} attendees</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-2 mt-2">
+            <div className="w-full bg-muted rounded-full h-2 mt-3">
               <div className="bg-brand-green h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((eventData.attendees || 0) / eventData.max_attendees) * 100}%` }}
               ></div>

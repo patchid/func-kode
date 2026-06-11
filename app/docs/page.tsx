@@ -10,8 +10,8 @@ export default function DocsPage() {
           <div className="flex items-center justify-center gap-4 mb-6">
             <span className="inline-block animate-bounce">
               <Image 
-                src="/raccoon.png" 
-                alt="Raccoon Mascot" 
+                src="/landing/logo.png"
+                alt="func(Kode) Logo"
                 width={56} 
                 height={56}
               />
