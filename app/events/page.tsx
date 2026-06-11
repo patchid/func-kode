@@ -148,7 +148,7 @@ export default function EventsPage() {
           {upcomingEvents.length > 0 ? (
             <div className="grid gap-8">
               {upcomingEvents.map((event, index) => (
-                <Card key={event.id} className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden animate-slide-up`} style={{animationDelay: `${index * 0.1}s`}}>
+                <Card key={event.id} className={`border border-border shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden animate-slide-up`} style={{animationDelay: `${index * 0.1}s`}}>
                   <CardContent className="p-0">
                     <div className="bg-gradient-to-r from-brand-blue to-primary p-6 text-white">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -256,7 +256,7 @@ export default function EventsPage() {
               ))}
             </div>
           ) : (
-            <Card className="border-0 shadow-lg">
+            <Card className="border border-border shadow-lg">
               <CardContent className="p-12 text-center">
                 <div className="text-6xl mb-4">📅</div>
                 <h3 className="text-xl font-semibold mb-2 text-foreground">No upcoming events</h3>
@@ -317,7 +317,7 @@ export default function EventsPage() {
 
         {/* Call to Action */}
         <section className="text-center">
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-brand-blue/10 via-primary/10 to-brand-green/10">
+          <Card className="border border-border shadow-xl bg-gradient-to-r from-brand-blue/10 via-primary/10 to-brand-green/10">
             <CardContent className="p-12">
               <div className="text-5xl mb-6">🚀</div>
               <h3 className="text-2xl font-bold mb-4 text-foreground">Want to Host Your Own Event?</h3>
