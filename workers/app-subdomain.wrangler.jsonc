@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Dedicated wrangler config for the app-subdomain Worker.
+  // Deploy with: wrangler deploy --config workers/app-subdomain.wrangler.jsonc
+  // Or via GitHub Actions: .github/workflows/deploy-app-subdomain.yml
+  "name": "app-subdomain",
+  "main": "workers/app-subdomain.ts",
+  "compatibility_date": "2026-06-11",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "routes": [
+    {
+      "pattern": "app.patch-id.com/*",
+      "zone_name": "patch-id.com"
+    }
+  ]
+}

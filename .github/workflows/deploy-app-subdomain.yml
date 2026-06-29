@@ -1,0 +1,50 @@
+# Deploy app-subdomain Cloudflare Worker
+# Triggered on push to main only.
+# Rewrites app.patch-id.com/* → patch-id.com/dashboard/*
+#
+# Required secrets (set in GitHub repo Settings → Secrets → Actions):
+#   CLOUDFLARE_API_TOKEN  — CF API token with Workers:Edit permission
+#   CLOUDFLARE_ACCOUNT_ID — CF account ID
+
+name: Deploy app-subdomain Worker
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'workers/app-subdomain.ts'
+      - 'workers/app-subdomain.wrangler.jsonc'
+      - '.github/workflows/deploy-app-subdomain.yml'
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Deploy app-subdomain Worker
+        run: |
+          wrangler deploy \
+            --config workers/app-subdomain.wrangler.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Verify deployment
+        run: |
+          echo "Worker deployed. Verifying route..."
+          curl -s -o /dev/null -w "app.patch-id.com HTTP status: %{http_code}\n" \
+            https://app.patch-id.com/ || echo "Note: DNS may take a moment to propagate."
