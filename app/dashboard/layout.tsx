@@ -1,47 +1,39 @@
-import { redirect } from "next/navigation";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-
 /**
- * Dashboard layout — server component.
+ * Dashboard layout — auth guard for all /dashboard/** routes
  *
- * Auth guard (Issue #119):
- *   - Uses getUser() (not getSession()) to validate the session server-side.
- *   - Unauthenticated → redirects to /auth/login?redirect=/dashboard
- *   - Authenticated but not onboarded → redirects to /onboard
- *   - Authenticated + onboarded → renders children normally
+ * Any unauthenticated request to /dashboard/** is redirected
+ * to /connect (GitHub OAuth) rather than a login page.
  *
- * This fixes the "redirected to /auth/login even when logged in" symptom
- * caused by getSession() vs getUser() mismatch noted in issue #119.
+ * This layout wraps:
+ *   /dashboard          → main developer dashboard
+ *   /dashboard/profile  → developer profile
+ *   /dashboard/score    → Patch ID score view
+ *   /dashboard/settings → account settings
+ *   /dashboard/onboarding → post-oauth onboarding
  */
+
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createClient();
 
-  // getUser() makes a network request to Supabase to validate the JWT.
-  // This is the correct approach post @supabase/ssr migration (PR #106).
   const {
     data: { user },
-    error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
-    redirect("/auth/login?redirect=/dashboard");
+  if (!user) {
+    redirect("/connect");
   }
 
-  // Check onboarding status — skip the DB call if user is already marked
-  // as onboarded via session metadata to minimise latency.
-  const { data: profile } = await supabase
-    .from("users")
-    .select("is_onboarded")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (profile && !profile.is_onboarded) {
-    redirect("/onboard");
-  }
-
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-background">
+      {/* TODO: Add DashboardNav component here in Sprint 2 */}
+      <main className="flex-1">{children}</main>
+    </div>
+  );
 }

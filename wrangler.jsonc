@@ -21,5 +21,34 @@
   },
   "observability": {
     "enabled": true
+  },
+  // Branch deployment rules — enforced via Cloudflare Pages dashboard.
+  // Production: main only.
+  // Preview: dev, staging/demo only.
+  // All other branches (feat/*, fix/*, chore/*) must have auto-deploy DISABLED.
+  // See docs/cloudflare-branch-rules.md for full runbook.
+  "env": {
+    "production": {
+      "name": "func-kode",
+      "routes": [
+        {
+          "pattern": "patch-id.com/*",
+          "zone_name": "patch-id.com"
+        }
+      ]
+    },
+    "preview": {
+      "name": "func-kode-preview",
+      "routes": [
+        {
+          "pattern": "dev.patch-id.com/*",
+          "zone_name": "patch-id.com"
+        },
+        {
+          "pattern": "staging.patch-id.com/*",
+          "zone_name": "patch-id.com"
+        }
+      ]
+    }
   }
 }
